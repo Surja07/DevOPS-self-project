@@ -1,5 +1,9 @@
 node('built-in') 
 {
+stage('Workspace Cleanup') 
+{
+    cleanWs()
+}
    stage ('Continous download')
       {
     git branch: 'main', url: 'https://github.com/Surja07/Maven1.git'
@@ -12,11 +16,15 @@ node('built-in')
     {
      'scp /var/lib/jenkins/workspace/pipeline5/hello.java ubuntu@172.31.9.223:/var/lib/tomcat10/webapps/hello.java'
      }
-   stage ('continous testing')
-    {
-       sh 'mv /var/lib/jenkins/workspace/pipeline5/hello.java /var/lib/jenkins/workspace/pipeline5/HelloWorld.java'
-    }
-    stage ('Continous release')
+stage('Compile and Test Java')
+{
+    sh '''
+        mv /var/lib/jenkins/workspace/pipeline5/hello.java /var/lib/jenkins/workspace/pipeline5/HelloWorld.java
+        javac /var/lib/jenkins/workspace/pipeline5/HelloWorld.java
+        java -cp /var/lib/jenkins/workspace/pipeline5 HelloWorld > /var/lib/jenkins/workspace/pipeline5/test_output.txt
+    '''
+  }
+ stage ('Continous release')
     {
 sh '''
 javac /var/lib/jenkins/workspace/pipeline5/HelloWorld.java
