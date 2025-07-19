@@ -1,0 +1,32 @@
+node('built-in') 
+{
+    stage('Continous download') {
+        git branch: 'main', url: 'https://github.com/Surja07/Maven1.git'
+    }
+
+    stage('Continous build') {
+        sh '''mvn package'''
+    }
+
+    stage('Continous deployment') {
+        sh '''
+        scp /var/lib/jenkins/workspace/pipeline5/HelloWorld.java ubuntu@172.31.9.223:/var/lib/tomcat10/webapps/HelloWorld.java
+        '''
+    }
+
+    stage('Compile and Test Java') {
+        sh '''
+        javac /var/lib/jenkins/workspace/pipeline5/HelloWorld.java
+        java -cp /var/lib/jenkins/workspace/pipeline5 HelloWorld > /var/lib/jenkins/workspace/pipeline5/test_output.txt
+        '''
+    }
+
+    stage('Continous release') {
+        sh '''
+        javac /var/lib/jenkins/workspace/pipeline5/HelloWorld.java
+        '''
+        sh '''
+        scp /var/lib/jenkins/workspace/pipeline5/HelloWorld.class ubuntu@172.31.12.169:/var/lib/tomcat10/webapps/
+        '''
+    }
+}
