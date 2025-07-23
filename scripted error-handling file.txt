@@ -1,0 +1,65 @@
+node('built-in')
+{
+    stage ('continous Download')
+    {
+         try
+                  {
+                      git branch: 'main', url: 'https://github.com/Surja07/python.git'
+                   }
+                  catch(e)
+                   {
+                      mail bcc: 'dasss', body: 'downloaidng fail ', cc: 'dassk861', from: '', replyTo: '', subject: 'downloading ', to: 'dassk86@gmail.ocm'
+                      exit(1)
+                    }
+           }
+             
+     stage ('continous build')
+      {
+         try
+                  {
+                     sh 'python3 Python.py'  
+                  }
+                  catch(e)
+                  {
+                      mail bcc: 'surja', body: 'build is failed ', cc: 'surja', from: '', replyTo: '', subject: 'buidl is failed', to: 'dassk861@gmail.com'
+                      exit (1)
+                    }
+              }
+     stage ('continous test')
+        {
+        try
+               {
+                  sh 'python3 "/var/lib/jenkins/workspace/scripted error-handling/Python.py"'    
+                           }
+                    catch (e)
+                         {
+                            mail bcc: 'dassk861@gmail.com', body: 'test fails', cc: 'dassk861@gmail.com', from: '', replyTo: '', subject: 'testing fails', to: 'dassk861@gmail.com'
+                            exit(1)
+                           }
+                }  
+        stage ('continous deployment')
+                  {
+                    try
+                        {
+                              sh 'python3 "/var/lib/jenkins/workspace/scripted error-handling/Python.py"'
+                          }
+                         catch(e)
+                         {
+                          mail bcc: 'dassk861@gmail.com', body: 'deployment fails ', cc: 'dassk861@gmail.com', from: '', replyTo: '', subject: 'deployment fails ', to: 'dassk861@gmail.com'
+                          exit(1)
+                           }
+                   }
+                   
+        stage ('continous release')
+                 {
+            try
+                        {
+                           sh 'scp "/var/lib/jenkins/workspace/scripted error-handling/Python.py" ubuntu@172.31.12.169:/var/lib/tomcat10/webapps/'
+                         }
+            catch (e)
+                        {
+                         mail bcc: 'dassk861@gmail.com', body: 'release failed', cc: 'dassk861@gmail.com', from: '', replyTo: '', subject: 'deployment fails ', to: 'dassk861@gmail.com'
+                          exit(1)
+                       }
+                 }
+            }
