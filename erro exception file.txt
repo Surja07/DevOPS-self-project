@@ -1,0 +1,43 @@
+pipeline
+{
+ agent any
+    stages
+    {
+        stage ('continous download')
+        {
+            steps
+            {
+              script
+               {
+                  try
+                  {
+                      git branch: 'main', url: 'https://github.com/Surja07/python.git'
+                   }
+                  catch(e)
+                  {
+                      mail bcc: 'dasss', body: 'downloaidng fail ', cc: 'dassk861', from: '', replyTo: '', subject: 'downloading ', to: 'dassk86@gmail.ocm'
+                      exit(1)
+                  }
+              }
+         }
+      }
+  stage ('continous build')
+        {
+            steps
+            {
+              script
+               {
+                  try
+                  {
+                     sh 'python3 Python.py'  
+                  }
+                  catch(e)
+                  {
+                      mail bcc: 'surja', body: 'build is failed ', cc: 'surja', from: '', replyTo: '', subject: 'buidl is failed', to: 'dassk861@gmail.com'
+                      (1)
+                  }
+              }
+          }
+       }
+    }
+  }  
