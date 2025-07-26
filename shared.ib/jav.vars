@@ -13,14 +13,12 @@ def deploymentToSlave1(jobname, ip) {
 }
 
 def test (jobname) {
-    stage('4. Compile and Run Java') {
-        echo 'Compiling and running HelloWorld.java...'
         sh """
             javac /var/lib/jenkins/workspace/${jobname}/HelloWorld.java
             java -cp /var/lib/jenkins/workspace/${jobname} HelloWorld > /var/lib/jenkins/workspace/${jobname}/test_output.txt
         """
     }
-}
+
  def release(jobname, ip) {
     sh "scp /var/lib/jenkins/workspace/${jobname}/HelloWorld.java ubuntu@${ip}:/var/lib/tomcat10/webapps/"
 }
