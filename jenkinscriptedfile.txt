@@ -1,0 +1,32 @@
+node('built-in')
+{
+stage('continous download')
+{
+   git branch: 'main', url: 'https://github.com/Surja07/Maven1.git'
+}
+
+stage('continous build') 
+{
+     sh 'mvn package'
+ }
+stage('continous deployment')
+{
+     sh '''
+            scp /var/lib/jenkins/workspace/scriptedpipeline-33/HelloWorld.java \
+            ubuntu@172.31.9.223:/home/ubuntu/webapps/HelloWorld.java
+        '''
+}
+stage('continous testing')
+{
+    "javac /var/lib/jenkins/workspace/scriptedpipeline-33/HelloWorld.java"
+     "java -cp /var/lib/jenkins/workspace/scriptedpipeline-33 HelloWorld"
+}
+
+stage('continous release') 
+ {
+        sh '''
+        scp /var/lib/jenkins/workspace/scriptedpipeline-3/HelloWorld.class ubuntu@172.31.12.169:/var/lib/tomcat10/webapps/
+        '''
+    }
+
+}
