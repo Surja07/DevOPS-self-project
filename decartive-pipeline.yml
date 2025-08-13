@@ -1,0 +1,61 @@
+pipeline
+{
+agent any
+    stages
+    {
+        stage ("continous download")
+        {
+            steps
+            {
+                 git branch: 'main', url: 'https://github.com/Surja07/Maven1.git'
+            }
+            
+        }
+        
+    stage ("contious build")
+         {
+             steps
+             {
+                   sh '''mvn package'''
+             }
+         }
+        
+ stage ("contious deployment")
+    {
+        steps
+        {
+              sh '''
+        scp /var/lib/jenkins/workspace/scriptedpipeline-3/HelloWorld.java ubuntu@172.31.9.223:/var/lib/tomcat10/webapps/HelloWorld.java
+        '''
+        }
+    }
+    
+    stage ("contious testing")
+    {
+        steps
+        {
+            sh '''
+        javac /var/lib/jenkins/workspace/scriptedpipeline-3/HelloWorld.java
+        java -cp /var/lib/jenkins/workspace/scriptedpipeline-3 HelloWorld > /var/lib/jenkins/workspace/scriptedpipeline-3/test_output.txt
+        '''
+
+        }
+    }
+    
+        stage ("contious relase")
+        {
+            steps
+      {
+                     
+        sh '''
+        scp /var/lib/jenkins/workspace/scriptedpipeline-3/HelloWorld.class ubuntu@172.31.12.169:/var/lib/tomcat10/webapps/
+        '''
+             }
+        }
+    
+    
+    
+        
+    }
+}
+
